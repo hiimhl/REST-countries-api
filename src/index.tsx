@@ -1,9 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { ThemeProvider } from "styled-components";
-import { GlobalStyle } from "./global-style";
-import { lightTheme } from "./theme";
 import App from "./App";
+import { RecoilRoot } from "recoil";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -11,9 +9,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={lightTheme}>
-      <GlobalStyle />
+    <RecoilRoot>
       <App />
-    </ThemeProvider>
+    </RecoilRoot>
   </React.StrictMode>
 );

@@ -6,7 +6,6 @@ import { regionAtom } from "./atom";
 const URL = `https://restcountries.com/v3.1`;
 
 // const rigion = useRecoilValue(regionAtom);
-
 export interface ICounty {
   name: {
     common: string;

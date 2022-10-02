@@ -5,6 +5,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "react-query";
 import { countiesFetch, ICounty } from "../api";
 import { stringify } from "querystring";
+import Card from "../components/Card";
 
 const Wrapper = styled.div`
   width: 90%;
@@ -67,10 +68,24 @@ const SelectForm = styled(InputForm)`
     border-radius: 5px;
   }
 `;
-const MyUl = styled.ul``;
+const MyUl = styled.ul`
+  width: 100%;
+  /* height: 90vh; */
+  background-color: beige;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4%;
+  li {
+    background-color: aquamarine;
+    width: 22%;
+    height: 24rem;
+    margin-bottom: 4rem;
+    border-radius: 5px;
+  }
+`;
 
 function Home() {
-  const { data, isLoading } = useQuery<ICounty>(
+  const { data, isLoading } = useQuery<any>(
     ["counties", "nowCounties"],
     countiesFetch
   );
@@ -99,24 +114,11 @@ function Home() {
         </SelectForm>
       </SearchContainer>
       <MyUl>
-        <li>
-          <img alt="hi" />
-          <h5>Germany</h5>
-          <p>
-            <strong>Population:</strong> 123 <br />
-            <strong>Region:</strong> Europe <br />
-            <strong>Capital:</strong> Berlin
-          </p>
-        </li>
-        <li>
-          <img alt="hi" />
-          <h5>Germany</h5>
-          <p>
-            <strong>Population:</strong> 123 <br />
-            <strong>Region:</strong> Europe <br />
-            <strong>Capital:</strong> Berlin
-          </p>
-        </li>
+        {isLoading ? (
+          <p>"is.. loading..."</p>
+        ) : (
+          data.map((coun: any) => <Card data={coun} />)
+        )}
       </MyUl>
     </Wrapper>
   );

@@ -6,7 +6,7 @@ declare module "styled-components" {
     textColor: string;
     bgColor: string;
     elementsColor: string;
-    inputColor?: string;
+    inputColor: string;
     shadowColor: string;
   }
 }

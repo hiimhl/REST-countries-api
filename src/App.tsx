@@ -5,16 +5,19 @@ import { darkTheme, lightTheme } from "./theme";
 import { useRecoilValue } from "recoil";
 import { themeAtom } from "./atom";
 import Router from "./routes/Router";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 function App() {
+  const client = new QueryClient();
   const theme = useRecoilValue(themeAtom);
+
   return (
-    <>
+    <QueryClientProvider client={client}>
       <ThemeProvider theme={theme ? darkTheme : lightTheme}>
         <GlobalStyle />
         <Router />
       </ThemeProvider>
-    </>
+    </QueryClientProvider>
   );
 }
 

@@ -1,5 +1,7 @@
+// Header - switch the theme
+
 import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { themeAtom } from "../atom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,6 +14,7 @@ const MyHeader = styled.header`
   -webkit-box-shadow: 5px 3px 15px 3px ${(props) => props.theme.shadowColor};
   box-shadow: 5px 3px 15px 3px ${(props) => props.theme.shadowColor};
 `;
+
 const Wrapper = styled.div`
   width: 90%;
   height: 8vh;

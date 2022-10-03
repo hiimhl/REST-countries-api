@@ -5,7 +5,7 @@ export const darkTheme: DefaultTheme = {
   bgColor: "hsl(207, 26%, 17%)",
   elementsColor: "hsl(209, 23%, 22%)",
   inputColor: "hsl(0, 0%, 100%)",
-  shadowColor: "rgb(0, 0, 0)",
+  shadowColor: "rgba(0, 0, 0, 0.1)",
 };
 
 export const lightTheme: DefaultTheme = {

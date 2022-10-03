@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "react-query";
 import { countiesFetch, ICounty } from "../api";
-import { stringify } from "querystring";
 import Card from "../components/Card";
 
 const Wrapper = styled.div`
@@ -16,7 +15,7 @@ const Wrapper = styled.div`
 const SearchContainer = styled.div`
   display: flex;
   width: 100%;
-  height: 10vh;
+  height: 12vh;
   justify-content: space-between;
   align-items: center;
 `;
@@ -40,9 +39,13 @@ const InputForm = styled.form`
     }
   }
   input {
-    padding: 10px 40px 10px 10px;
+    padding: 10px;
+    width: 30rem;
+    height: 2.7rem;
     border: none;
+    border-radius: 5px;
     background-color: ${(props) => props.theme.elementsColor};
+    color: ${(props) => props.theme.textColor};
 
     &:focus {
       outline: none;
@@ -70,27 +73,20 @@ const SelectForm = styled(InputForm)`
 `;
 const MyUl = styled.ul`
   width: 100%;
-  /* height: 90vh; */
-  background-color: beige;
   display: flex;
   flex-wrap: wrap;
   gap: 4%;
-  li {
-    background-color: aquamarine;
-    width: 22%;
-    height: 24rem;
-    margin-bottom: 4rem;
-    border-radius: 5px;
-  }
 `;
 
 function Home() {
-  const { data, isLoading } = useQuery<any>(
+  const { data, isLoading } = useQuery<ICounty[] | any>(
     ["counties", "nowCounties"],
     countiesFetch
   );
-  // console.log(data);
 
+  // const onCardClick = () => {
+  //   nevigate(`/county/${county.id}`);
+  // };
   return (
     <Wrapper>
       <SearchContainer>
@@ -102,7 +98,7 @@ function Home() {
         </InputForm>
         <SelectForm>
           <select>
-            <option value="hi" selected hidden>
+            <option value="none" defaultChecked hidden>
               Filter by Region
             </option>
             <option value="Africa">Africa</option>
@@ -117,7 +113,7 @@ function Home() {
         {isLoading ? (
           <p>"is.. loading..."</p>
         ) : (
-          data.map((coun: any) => <Card data={coun} />)
+          data.map((coun: any) => <Card key={coun.name.common} data={coun} />)
         )}
       </MyUl>
     </Wrapper>

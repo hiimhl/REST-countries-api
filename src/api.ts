@@ -9,19 +9,21 @@ const URL = `https://restcountries.com/v3.1`;
 export interface ICounty {
   name: {
     common: string;
-    nativeName: string;
+    nativeName: {};
   };
   population: number;
   region: string;
   subregion: string;
-  currencies: string;
+  currencies: {};
   borders?: [string];
-  languages: string;
+  languages: {};
   capital: [string];
+  fifa: string;
   flags: {
     png: string;
     svg: string;
   };
+  tld: [string];
 }
 
 export const countiesFetch = () => {

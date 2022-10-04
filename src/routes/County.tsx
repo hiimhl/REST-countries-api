@@ -1,4 +1,5 @@
 import React from "react";
+import { useQuery } from "react-query";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -13,17 +14,42 @@ const Ul = styled.ul`
 `;
 const BorderUl = styled.ul``;
 
-function County() {
-  const id = useParams();
-  const navigate = useNavigate();
+interface ILang {
+  nativeName: string;
+  currencies: [
+    {
+      code: string;
+      symbol: string;
+    }
+  ];
+  borders: [];
+}
 
+function County() {
+  const params = useParams();
+  const navigate = useNavigate();
+  const paramsID = params.id;
+  // console.log(paramsID);
+
+  //Location - Navegate로 보낸 id와 date 받기
   const location = useLocation();
   const state = location.state as { id: string; data: any };
   const countyId = state.id;
   const data = state.data;
-  console.log(data);
-  const name = Object.keys(data.name.nativeName)[0];
-  console.log(name);
+
+  const languagesFetch = () => {
+    return fetch(`https://restcountries.com/v2/name/${paramsID}`).then((res) =>
+      res.json()
+    );
+  };
+
+  //
+  const { data: langData, isLoading } = useQuery<ILang>(
+    ["lang", "lang"],
+    languagesFetch
+  );
+  // console.log(langData);
+
   return (
     <Wrapper>
       <button onClick={() => navigate("/")}>Back</button>
@@ -33,12 +59,8 @@ function County() {
           <h3>{countyId}</h3>
           <ul>
             <li>
-              <b>
-                Native Name:
-                {data.name.nativeName.map((hi: any, index: number) => (
-                  <span>Object.values(hi)[index]</span>
-                ))}
-              </b>
+              <b>Native Name:</b>
+              {langData?.nativeName}
             </li>
             <li>
               <b>Population:</b> {data.population}
@@ -47,10 +69,10 @@ function County() {
               <b>Region:</b> {data.region}
             </li>
             <li>
-              <b>Currencies:</b> {data.currencies.name}
+              <b>Currencies:</b>
             </li>
             <li>
-              <b>Top Level Domain:</b> {data.tld[0]}
+              <b>Top Level Domain:</b> {data.tld}
             </li>
           </ul>
           <ul>

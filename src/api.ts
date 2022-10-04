@@ -9,7 +9,10 @@ const URL = `https://restcountries.com/v3.1`;
 export interface ICounty {
   name: {
     common: string;
-    nativeName: {};
+    nativeName: {
+      eng?: string;
+    };
+    official: string;
   };
   population: number;
   region: string;

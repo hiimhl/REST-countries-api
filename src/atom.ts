@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 
 export const themeAtom = atom({
   key: "isDark",
@@ -6,6 +6,11 @@ export const themeAtom = atom({
 });
 
 export const regionAtom = atom({
-  key: "region",
+  key: "category",
   default: "Asia",
+});
+
+export const formAtom = atom({
+  key: "form",
+  default: "",
 });

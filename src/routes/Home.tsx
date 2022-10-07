@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "react-query";
 import { countiesFetch, ICounty } from "../api";
 import Card from "../components/Card";
+import { useRecoilState } from "recoil";
+import { regionAtom } from "../atom";
 
 const Wrapper = styled.div`
   width: 90%;
@@ -84,9 +86,15 @@ function Home() {
     countiesFetch
   );
 
-  // const onCardClick = () => {
-  //   nevigate(`/county/${county.id}`);
-  // };
+  const [category, setCategory] = useRecoilState(regionAtom);
+
+  const onFliterHandler = (event: React.FormEvent<HTMLSelectElement>) => {
+    setCategory(event.currentTarget.value);
+    console.log(category);
+  };
+
+  const filterState = data.filter((d: any) => d.region === category);
+
   return (
     <Wrapper>
       <SearchContainer>
@@ -97,7 +105,7 @@ function Home() {
           <input placeholder="Search for a country..." />
         </InputForm>
         <SelectForm>
-          <select>
+          <select onInput={onFliterHandler}>
             <option value="none" defaultChecked hidden>
               Filter by Region
             </option>
@@ -113,7 +121,9 @@ function Home() {
         {isLoading ? (
           <p>"is.. loading..."</p>
         ) : (
-          data.map((coun: any) => <Card key={coun.name.common} data={coun} />)
+          filterState.map((coun: any) => (
+            <Card key={coun.name.common} data={coun} />
+          ))
         )}
       </MyUl>
     </Wrapper>

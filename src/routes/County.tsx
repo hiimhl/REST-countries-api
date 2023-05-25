@@ -29,7 +29,6 @@ function County() {
   const params = useParams();
   const navigate = useNavigate();
   const paramsID = params.id;
-  // console.log(paramsID);
 
   //Location - Navegate로 보낸 id와 date 받기
   const location = useLocation();

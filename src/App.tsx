@@ -3,7 +3,7 @@ import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./global-style";
 import { darkTheme, lightTheme } from "./theme";
 import { useRecoilValue } from "recoil";
-import { themeAtom } from "./atom";
+import { themeAtom } from "./data/atom";
 import Router from "./routes/Router";
 import { QueryClient, QueryClientProvider } from "react-query";
 

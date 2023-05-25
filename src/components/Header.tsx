@@ -3,7 +3,7 @@
 import React from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { themeAtom } from "../atom";
+import { themeAtom } from "../data/atom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon } from "@fortawesome/free-solid-svg-icons";
 import { faSun } from "@fortawesome/free-regular-svg-icons";
@@ -11,8 +11,8 @@ import { faSun } from "@fortawesome/free-regular-svg-icons";
 const MyHeader = styled.header`
   width: 100%;
   height: 8vh;
-  -webkit-box-shadow: 5px 3px 15px 3px ${(props) => props.theme.shadowColor};
-  box-shadow: 5px 3px 15px 3px ${(props) => props.theme.shadowColor};
+  -webkit-box-shadow: ${(props) => props.theme.shadowColor};
+  box-shadow: ${(props) => props.theme.shadowColor};
 `;
 
 const Wrapper = styled.div`
@@ -70,4 +70,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default React.memo(Header);

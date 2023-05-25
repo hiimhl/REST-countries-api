@@ -1,47 +1,65 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { ICounty } from "../api";
+import { ICountry } from "../data/api";
 
 const ItemWrapper = styled.li`
   background-color: ${(props) => props.theme.elementsColor};
-  width: 22%;
-  min-width: 250px;
-  height: 23rem;
-  margin-bottom: 4rem;
+  width: 100%;
+  /* height: 90%; */
+  height: 90%;
+  margin-bottom: 60px;
   border-radius: 5px;
   overflow: hidden;
   color: ${(props) => props.theme.textColor};
 
   cursor: pointer;
-  -webkit-box-shadow: 5px 3px 15px 3px ${(props) => props.theme.shadowColor};
-  box-shadow: 5px 3px 15px 3px ${(props) => props.theme.shadowColor};
+  -webkit-box-shadow: ${(props) => props.theme.shadowColor};
+  box-shadow: ${(props) => props.theme.shadowColor};
 
+  /* flags */
   img {
     width: 100%;
-    height: 11rem;
+    height: 50%;
   }
+  /* content */
   div {
     margin-top: 30px;
     margin-left: 25px;
-    p {
-      line-height: 1.5rem;
-    }
+    margin-bottom: 15px;
+
     h5 {
       font-weight: 800;
       font-size: 1.5rem;
       margin-bottom: 20px;
     }
+    p {
+      line-height: 1.5rem;
+    }
     strong {
       font-weight: 600;
     }
   }
+
+  /* laptop */
+  @media (max-width: 1280px) {
+    /* flags */
+    img {
+      width: 100%;
+      height: 45%;
+    }
+  }
 `;
 
-function Card({ data }: ICounty | any) {
+// Interface
+interface IProps {
+  data: ICountry;
+}
+
+function Card({ data }: IProps) {
   const navigate = useNavigate();
   const onClick = () =>
-    navigate(`/county/${data.name.common}`, {
+    navigate(`/country/${data.name.common}`, {
       state: {
         id: data.name.common,
         data,
@@ -62,4 +80,4 @@ function Card({ data }: ICounty | any) {
   );
 }
 
-export default Card;
+export default React.memo(Card);

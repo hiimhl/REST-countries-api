@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "react-query";
-import { countiesFetch, ICounty } from "../api";
+import { countriesFetch, ICountry } from "../data/api";
 import Card from "../components/Card";
 import { useRecoilState } from "recoil";
-import { regionAtom } from "../atom";
+import { regionAtom } from "../data/atom";
 
 const Wrapper = styled.div`
   width: 90%;
@@ -26,8 +26,8 @@ const InputForm = styled.form`
   color: ${(props) => props.theme.inputColor};
   border-radius: 5px;
 
-  -webkit-box-shadow: 5px 3px 15px 3px ${(props) => props.theme.shadowColor};
-  box-shadow: 5px 3px 15px 3px ${(props) => props.theme.shadowColor};
+  -webkit-box-shadow: ${(props) => props.theme.shadowColor};
+  box-shadow: ${(props) => props.theme.shadowColor};
 
   button {
     border: none;
@@ -75,25 +75,45 @@ const SelectForm = styled(InputForm)`
 `;
 const MyUl = styled.ul`
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4%;
+  display: grid;
+  grid-template-columns: 22% 22% 22% 22%;
+  justify-content: space-between;
+
+  /* tablet */
+  @media (max-width: 820px) {
+    grid-template-columns: 30% 30% 30%;
+  }
 `;
 
 function Home() {
-  const { data, isLoading } = useQuery<ICounty[] | any>(
+  const { data, isLoading } = useQuery<ICountry[]>(
     ["counties", "nowCounties"],
-    countiesFetch
+    countriesFetch
   );
 
   const [category, setCategory] = useRecoilState(regionAtom);
-
+  const [inputValue, setInput] = useState("");
   const onFliterHandler = (event: React.FormEvent<HTMLSelectElement>) => {
     setCategory(event.currentTarget.value);
-    console.log(category);
+  };
+  const onInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(event.currentTarget.value);
   };
 
-  const filterState = data.filter((d: any) => d.region === category);
+  const showList = () => {
+    const filterState = data!.filter(
+      (country: ICountry) => country.region === category
+    );
+    if (category === "all") {
+      return data!.map((country: ICountry) => (
+        <Card key={country.name.common} data={country} />
+      ));
+    } else {
+      return filterState.map((country: ICountry) => (
+        <Card key={country.name.common} data={country} />
+      ));
+    }
+  };
 
   return (
     <Wrapper>
@@ -102,13 +122,18 @@ function Home() {
           <button>
             <FontAwesomeIcon icon={faSearch} />
           </button>
-          <input placeholder="Search for a country..." />
+          <input
+            value={inputValue}
+            onChange={onInputHandler}
+            placeholder="Search for a country..."
+          />
         </InputForm>
         <SelectForm>
           <select onInput={onFliterHandler}>
-            <option value="none" defaultChecked hidden>
+            <option value="all" defaultChecked hidden>
               Filter by Region
             </option>
+            <option value="all">All</option>
             <option value="Africa">Africa</option>
             <option value="Americas">America</option>
             <option value="Asia">Asia</option>
@@ -117,15 +142,7 @@ function Home() {
           </select>
         </SelectForm>
       </SearchContainer>
-      <MyUl>
-        {isLoading ? (
-          <p>"is.. loading..."</p>
-        ) : (
-          filterState.map((coun: any) => (
-            <Card key={coun.name.common} data={coun} />
-          ))
-        )}
-      </MyUl>
+      <MyUl>{isLoading ? <p>"is.. loading..."</p> : showList()}</MyUl>
     </Wrapper>
   );
 }

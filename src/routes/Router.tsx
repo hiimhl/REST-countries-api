@@ -1,7 +1,7 @@
 import React from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import Header from "../components/Header";
-import County from "./County";
+import Detail from "./Detail";
 import Home from "./Home";
 
 function Router() {
@@ -10,7 +10,7 @@ function Router() {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/country/:id" element={<County />} />
+        <Route path="/country/:id" element={<Detail />} />
       </Routes>
     </HashRouter>
   );

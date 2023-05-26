@@ -11,8 +11,11 @@ import { faSun } from "@fortawesome/free-regular-svg-icons";
 const MyHeader = styled.header`
   width: 100%;
   height: 8vh;
+  background-color: ${(props) => props.theme.elementsColor};
   -webkit-box-shadow: ${(props) => props.theme.shadowColor};
   box-shadow: ${(props) => props.theme.shadowColor};
+  position: sticky;
+  top: 0;
 `;
 
 const Wrapper = styled.div`

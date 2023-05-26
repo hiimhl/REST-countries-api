@@ -25,7 +25,7 @@ interface ILang {
   borders: [];
 }
 
-function County() {
+function Detail() {
   const params = useParams();
   const navigate = useNavigate();
   const paramsID = params.id;
@@ -84,4 +84,4 @@ function County() {
   );
 }
 
-export default County;
+export default Detail;

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUp, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "react-query";
 import { countriesFetch, ICountry } from "../data/api";
 import Card from "../components/Card";
 import { useRecoilState } from "recoil";
-import { regionAtom } from "../data/atom";
+import { formAtom, regionAtom } from "../data/atom";
+import { animateScroll as scroll } from "react-scroll";
 
 const Wrapper = styled.div`
   width: 90%;
@@ -14,18 +15,19 @@ const Wrapper = styled.div`
   max-width: 1440px;
   margin: auto;
 `;
-const SearchContainer = styled.div`
+const SearchContainer = styled.form`
   display: flex;
   width: 100%;
   height: 12vh;
   justify-content: space-between;
   align-items: center;
 `;
-const InputForm = styled.form`
+
+const SearchBar = styled.div`
   background-color: ${(props) => props.theme.elementsColor};
   color: ${(props) => props.theme.inputColor};
   border-radius: 5px;
-
+  width: 50%;
   -webkit-box-shadow: ${(props) => props.theme.shadowColor};
   box-shadow: ${(props) => props.theme.shadowColor};
 
@@ -41,9 +43,8 @@ const InputForm = styled.form`
     }
   }
   input {
-    padding: 10px;
-    width: 30rem;
-    height: 2.7rem;
+    width: 70%;
+    padding: 15px 10px;
     border: none;
     border-radius: 5px;
     background-color: ${(props) => props.theme.elementsColor};
@@ -54,34 +55,57 @@ const InputForm = styled.form`
     }
   }
 `;
-const SelectForm = styled(InputForm)`
-  label {
-    cursor: pointer;
-    padding: 10px 25px;
-  }
+const RegionOption = styled(SearchBar)`
+  width: 20%;
   select {
+    width: 100%;
     margin-top: 3px;
     background-color: ${(props) => props.theme.elementsColor};
     color: ${(props) => props.theme.textColor};
+
+    cursor: pointer;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 5px;
+
     &:focus {
       outline: none;
     }
-
-    cursor: pointer;
-    padding: 10px 25px;
-    border: none;
-    border-radius: 5px;
   }
 `;
 const MyUl = styled.ul`
   width: 100%;
   display: grid;
-  grid-template-columns: 22% 22% 22% 22%;
-  justify-content: space-between;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
 
   /* tablet */
   @media (max-width: 820px) {
-    grid-template-columns: 30% 30% 30%;
+    grid-template-columns: repeat(3, 30%);
+  }
+`;
+
+const UpButton = styled.button`
+  cursor: pointer;
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  border: 2px solid ${(props) => props.theme.inputColor};
+  background-color: ${(props) => props.theme.elementsColor};
+  border-radius: 50%;
+
+  /* icon */
+  svg {
+    color: ${(props) => props.theme.inputColor};
+    margin: 5px 3px;
+    font-size: 15px;
+  }
+`;
+
+const SearchMessage = styled.span`
+  b {
+    font-size: 16px;
+    font-weight: 700;
   }
 `;
 
@@ -92,43 +116,56 @@ function Home() {
   );
 
   const [category, setCategory] = useRecoilState(regionAtom);
-  const [inputValue, setInput] = useState("");
-  const onFliterHandler = (event: React.FormEvent<HTMLSelectElement>) => {
+  const [searchData, setSearchData] = useState("");
+  const [filterdData, setFilterdData] = useState<ICountry[]>();
+
+  const onFliterHandler = (event: React.FormEvent<HTMLSelectElement>) =>
     setCategory(event.currentTarget.value);
-  };
-  const onInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(event.currentTarget.value);
+  const onSearchHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.currentTarget.value;
+    setSearchData(value.toUpperCase());
   };
 
-  const showList = () => {
-    const filterState = data!.filter(
-      (country: ICountry) => country.region === category
-    );
-    if (category === "all") {
-      return data!.map((country: ICountry) => (
-        <Card key={country.name.common} data={country} />
-      ));
-    } else {
-      return filterState.map((country: ICountry) => (
-        <Card key={country.name.common} data={country} />
-      ));
+  const onGoTop = () => scroll.scrollToTop();
+  const onSubmit = (event: React.FormEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    if (filterdData?.length === 0) {
+      console.log("Can't find the " + searchData);
     }
+    setSearchData("");
   };
+
+  // Print the Country list
+  useEffect(() => {
+    if (category === "all") {
+      return setFilterdData(data);
+    } else if (searchData.length > 0) {
+      const search = data?.filter((country: ICountry) =>
+        country.name.common.toUpperCase().includes(searchData)
+      );
+      return setFilterdData(search);
+    } else if (category !== "all") {
+      const categoryFilter = filterdData?.filter(
+        (country: ICountry) => country.region === category
+      );
+      return setFilterdData(categoryFilter);
+    }
+  }, [searchData, data, category]);
 
   return (
     <Wrapper>
       <SearchContainer>
-        <InputForm>
-          <button>
+        <SearchBar>
+          <button type="submit" onClick={onSubmit}>
             <FontAwesomeIcon icon={faSearch} />
           </button>
           <input
-            value={inputValue}
-            onChange={onInputHandler}
+            value={searchData}
+            onChange={onSearchHandler}
             placeholder="Search for a country..."
           />
-        </InputForm>
-        <SelectForm>
+        </SearchBar>
+        <RegionOption>
           <select onInput={onFliterHandler}>
             <option value="all" defaultChecked hidden>
               Filter by Region
@@ -140,9 +177,25 @@ function Home() {
             <option value="Europe">Europe</option>
             <option value="Oceania">Oceania</option>
           </select>
-        </SelectForm>
+        </RegionOption>
       </SearchContainer>
-      <MyUl>{isLoading ? <p>"is.. loading..."</p> : showList()}</MyUl>
+      <UpButton onClick={onGoTop}>
+        <FontAwesomeIcon icon={faArrowUp} />
+      </UpButton>
+      <MyUl>
+        {isLoading ? (
+          <p>"is.. loading..."</p>
+        ) : (
+          filterdData?.map((country: ICountry) => (
+            <Card key={country.name.common} data={country} />
+          ))
+        )}
+        {filterdData?.length === 0 && (
+          <SearchMessage>
+            Can't find <b>{searchData}</b>
+          </SearchMessage>
+        )}
+      </MyUl>
     </Wrapper>
   );
 }

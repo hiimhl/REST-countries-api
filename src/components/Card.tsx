@@ -2,15 +2,13 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ICountry } from "../data/api";
+import { convertNumUnits } from "../number";
 
 const ItemWrapper = styled.li`
   background-color: ${(props) => props.theme.elementsColor};
   width: 100%;
-  /* height: 90%; */
-  height: 90%;
-  margin-bottom: 60px;
+  height: auto;
   border-radius: 5px;
-  overflow: hidden;
   color: ${(props) => props.theme.textColor};
 
   cursor: pointer;
@@ -20,13 +18,15 @@ const ItemWrapper = styled.li`
   /* flags */
   img {
     width: 100%;
-    height: 50%;
+    height: 9vw;
+    border-bottom: 1px solid ${(props) => props.theme.borderColor};
   }
+
   /* content */
   div {
-    margin-top: 30px;
-    margin-left: 25px;
-    margin-bottom: 15px;
+    width: 100%;
+    padding: 30px;
+    height: auto;
 
     h5 {
       font-weight: 800;
@@ -65,15 +65,21 @@ function Card({ data }: IProps) {
         data,
       },
     });
+
   return (
     <ItemWrapper onClick={onClick}>
       <img alt={data.name.common} src={data.flags.png} />
+
       <div>
         <h5>{data.name.common}</h5>
         <p>
-          <strong>Population:</strong> {data.population} <br />
-          <strong>Region:</strong> {data.region} <br />
-          <strong>Capital:</strong> {data.capital}
+          <strong>Population :</strong> {convertNumUnits(data.population)}{" "}
+          <br />
+          <strong>Region :</strong> {data.region} <br />
+          <strong>Capital :</strong>{" "}
+          {data.capital && data.capital[0].length > 11
+            ? data.capital[0].slice(0, 10) + "..."
+            : data.capital}
         </p>
       </div>
     </ItemWrapper>

@@ -7,7 +7,7 @@ export const themeAtom = atom({
 
 export const regionAtom = atom({
   key: "category",
-  default: "Asia",
+  default: "all",
 });
 
 export const formAtom = atom({

@@ -6,6 +6,7 @@ export const darkTheme: DefaultTheme = {
   elementsColor: "hsl(209, 23%, 22%)",
   inputColor: "hsl(0, 0%, 100%)",
   shadowColor: "5px 3px 15px 3px rgba(0, 0, 0, 0.1)",
+  borderColor: "hsl(209, 23%, 22%)",
 };
 
 export const lightTheme: DefaultTheme = {
@@ -14,4 +15,5 @@ export const lightTheme: DefaultTheme = {
   elementsColor: "hsl(0, 0%, 100%)",
   inputColor: "hsl(0, 0%, 52%)",
   shadowColor: "5px 3px 15px 3px #e7e7e7",
+  borderColor: "#e6e6e6",
 };

@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ICountry } from "../data/api";
 import { convertNumUnits } from "../number";
 
-const ItemWrapper = styled.li`
+const ItemWrapper = styled.li<{ headingSize?: boolean }>`
   background-color: ${(props) => props.theme.elementsColor};
   width: 100%;
   height: auto;
+  min-height: 330px;
   border-radius: 5px;
   color: ${(props) => props.theme.textColor};
+  margin-bottom: 60px;
+  overflow: hidden;
 
   cursor: pointer;
   -webkit-box-shadow: ${(props) => props.theme.shadowColor};
@@ -18,7 +21,7 @@ const ItemWrapper = styled.li`
   /* flags */
   img {
     width: 100%;
-    height: 9vw;
+    height: 45%;
     border-bottom: 1px solid ${(props) => props.theme.borderColor};
   }
 
@@ -30,11 +33,11 @@ const ItemWrapper = styled.li`
 
     h5 {
       font-weight: 800;
-      font-size: 1.5rem;
+      font-size: ${(props) => (props.headingSize ? "20px" : "24px")};
       margin-bottom: 20px;
     }
     p {
-      line-height: 1.5rem;
+      line-height: 24px;
     }
     strong {
       font-weight: 600;
@@ -42,11 +45,26 @@ const ItemWrapper = styled.li`
   }
 
   /* laptop */
-  @media (max-width: 1280px) {
+  @media screen and (max-width: 1280px) {
+    height: 25vw;
     /* flags */
     img {
-      width: 100%;
       height: 45%;
+    }
+    div {
+      padding: 20px;
+      h5 {
+        margin-bottom: ${(props) => (props.headingSize ? "10px" : "15px")};
+      }
+    }
+  }
+
+  /* mobile */
+  @media screen and (max-width: 428px) {
+    height: 90vw;
+    min-height: 300px;
+    img {
+      height: 47%;
     }
   }
 `;
@@ -57,6 +75,7 @@ interface IProps {
 }
 
 function Card({ data }: IProps) {
+  const [reduceFontSize, setReduceFontSize] = useState(false);
   const navigate = useNavigate();
   const onClick = () =>
     navigate(`/country/${data.name.common}`, {
@@ -66,8 +85,16 @@ function Card({ data }: IProps) {
       },
     });
 
+  useEffect(() => {
+    if (data.name.common.length > 12) {
+      setReduceFontSize(true);
+    } else {
+      setReduceFontSize(false);
+    }
+  }, []);
+
   return (
-    <ItemWrapper onClick={onClick}>
+    <ItemWrapper onClick={onClick} headingSize={reduceFontSize}>
       <img alt={data.name.common} src={data.flags.png} />
 
       <div>
@@ -76,10 +103,7 @@ function Card({ data }: IProps) {
           <strong>Population :</strong> {convertNumUnits(data.population)}{" "}
           <br />
           <strong>Region :</strong> {data.region} <br />
-          <strong>Capital :</strong>{" "}
-          {data.capital && data.capital[0].length > 11
-            ? data.capital[0].slice(0, 10) + "..."
-            : data.capital}
+          <strong>Capital :</strong> {data.capital}
         </p>
       </div>
     </ItemWrapper>

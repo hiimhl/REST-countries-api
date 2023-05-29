@@ -1,12 +1,11 @@
 // Header - switch the theme
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { themeAtom } from "../data/atom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoon } from "@fortawesome/free-solid-svg-icons";
-import { faSun } from "@fortawesome/free-regular-svg-icons";
+import { faSun, faMoon } from "@fortawesome/free-regular-svg-icons";
 
 const MyHeader = styled.header`
   width: 100%;
@@ -18,7 +17,7 @@ const MyHeader = styled.header`
   top: 0;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ mobile: boolean }>`
   width: 90%;
   height: 8vh;
   max-width: 1440px;
@@ -28,44 +27,60 @@ const Wrapper = styled.div`
   align-items: center;
 
   h1 {
-    font-size: 1.5rem;
+    font-size: 24px;
     font-weight: 800;
   }
   button {
     border: none;
     background-color: transparent;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 16px;
     cursor: pointer;
     text-align: center;
     color: ${(props) => props.theme.textColor};
 
     /* icon */
     svg {
+      font-size: 20px;
       margin-right: 7px;
-      margin-top: 1px;
+      transform: translateY(2px);
+    }
+  }
+
+  /* mobile */
+  @media screen and (max-width: 428px) {
+    h1 {
+      font-size: 18px;
     }
   }
 `;
 
 function Header() {
   const [theme, setTheme] = useRecoilState(themeAtom);
+  const [isMobile, setIsMobile] = useState(false);
   const onClickTheme = () => setTheme((curr) => !curr);
+
+  useEffect(() => {
+    if (window.innerWidth <= 428) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  }, []);
 
   return (
     <MyHeader>
-      <Wrapper>
+      <Wrapper mobile={isMobile}>
         <h1>Where in the _world?</h1>
-
         {theme ? (
           <button onClick={onClickTheme}>
             <FontAwesomeIcon icon={faSun} />
-            Light Mode
+            {!isMobile && "Light Mode"}
           </button>
         ) : (
           <button onClick={onClickTheme}>
             <FontAwesomeIcon icon={faMoon} />
-            Dark Mode
+            {!isMobile && "Dark Mode"}
           </button>
         )}
       </Wrapper>

@@ -14,20 +14,34 @@ const Wrapper = styled.div`
   height: 92vh;
   max-width: 1440px;
   margin: auto;
+
+  /* mobile */
+  @media screen and (max-width: 428px) {
+    width: 80%;
+  }
 `;
-const SearchContainer = styled.form`
+const FilterContainer = styled.form`
   display: flex;
   width: 100%;
   height: 12vh;
   justify-content: space-between;
   align-items: center;
+
+  /* Mobile */
+  @media screen and (max-width: 768px) {
+    margin: 50px 0;
+    max-width: none;
+    align-items: flex-start;
+    flex-direction: column;
+  }
 `;
 
 const SearchBar = styled.div`
   background-color: ${(props) => props.theme.elementsColor};
   color: ${(props) => props.theme.inputColor};
   border-radius: 5px;
-  width: 50%;
+  width: 70%;
+  max-width: 700px;
   -webkit-box-shadow: ${(props) => props.theme.shadowColor};
   box-shadow: ${(props) => props.theme.shadowColor};
 
@@ -54,9 +68,14 @@ const SearchBar = styled.div`
       outline: none;
     }
   }
+  /* Mobile */
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 `;
 const RegionOption = styled(SearchBar)`
-  width: 20%;
+  width: 25%;
+  max-width: 250px;
   select {
     width: 100%;
     margin-top: 3px;
@@ -72,16 +91,29 @@ const RegionOption = styled(SearchBar)`
       outline: none;
     }
   }
+  /* Mobile */
+  @media screen and (max-width: 768px) {
+    width: 50%;
+    min-width: 170px;
+  }
 `;
 const MyUl = styled.ul`
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 40px;
+  grid-template-columns: repeat(4, 21%);
+  justify-content: space-between;
 
   /* tablet */
-  @media (max-width: 820px) {
-    grid-template-columns: repeat(3, 30%);
+  @media screen and (max-width: 950px) {
+    grid-template-columns: repeat(3, 28%);
+  }
+  @media screen and (max-width: 768px) {
+    grid-template-columns: repeat(2, 45%);
+  }
+  /* mobile */
+  @media screen and (max-width: 428px) {
+    display: flex;
+    flex-wrap: wrap;
   }
 `;
 
@@ -154,7 +186,7 @@ function Home() {
 
   return (
     <Wrapper>
-      <SearchContainer>
+      <FilterContainer>
         <SearchBar>
           <button type="submit" onClick={onSubmit}>
             <FontAwesomeIcon icon={faSearch} />
@@ -178,7 +210,7 @@ function Home() {
             <option value="Oceania">Oceania</option>
           </select>
         </RegionOption>
-      </SearchContainer>
+      </FilterContainer>
       <UpButton onClick={onGoTop}>
         <FontAwesomeIcon icon={faArrowUp} />
       </UpButton>

@@ -6,7 +6,7 @@ import { useQuery } from "react-query";
 import { countriesFetch, ICountry } from "../data/api";
 import Card from "../components/Card";
 import { useRecoilState } from "recoil";
-import { formAtom, regionAtom } from "../data/atom";
+import { regionAtom } from "../data/atom";
 import { animateScroll as scroll } from "react-scroll";
 
 const Wrapper = styled.div`
@@ -125,6 +125,8 @@ const UpButton = styled.button`
   border: 2px solid ${(props) => props.theme.inputColor};
   background-color: ${(props) => props.theme.elementsColor};
   border-radius: 50%;
+  box-shadow: ${(props) => props.theme.buttonShadow};
+  -webkit-box-shadow: ${(props) => props.theme.buttonShadow};
 
   /* icon */
   svg {

@@ -5,8 +5,9 @@ export const darkTheme: DefaultTheme = {
   bgColor: "hsl(207, 26%, 17%)",
   elementsColor: "hsl(209, 23%, 22%)",
   inputColor: "hsl(0, 0%, 100%)",
-  shadowColor: "5px 3px 15px 3px rgba(0, 0, 0, 0.1)",
+  shadowColor: "0px 1px 6px 2px rgba(0, 0, 0, 0.05)",
   borderColor: "hsl(209, 23%, 22%)",
+  buttonShadow: "0px 1px 6px 2px rgba(0,0,0, 0.5)",
 };
 
 export const lightTheme: DefaultTheme = {
@@ -14,6 +15,7 @@ export const lightTheme: DefaultTheme = {
   bgColor: "hsl(0, 0%, 98%)",
   elementsColor: "hsl(0, 0%, 100%)",
   inputColor: "hsl(0, 0%, 52%)",
-  shadowColor: "5px 3px 15px 3px #e7e7e7",
+  shadowColor: "0px 1px 6px 2px rgba(0, 0, 0, 0.05)",
   borderColor: "#e6e6e6",
+  buttonShadow: "0px 1px 5px 2px rgba(0, 0, 0, 0.08)",
 };

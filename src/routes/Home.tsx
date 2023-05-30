@@ -20,7 +20,7 @@ const Wrapper = styled.div`
     width: 80%;
   }
 `;
-const FilterContainer = styled.form`
+const FilterContainer = styled.div`
   display: flex;
   width: 100%;
   height: 12vh;
@@ -36,7 +36,7 @@ const FilterContainer = styled.form`
   }
 `;
 
-const SearchBar = styled.div`
+const SearchBar = styled.form`
   background-color: ${(props) => props.theme.elementsColor};
   color: ${(props) => props.theme.inputColor};
   border-radius: 5px;
@@ -135,9 +135,11 @@ const UpButton = styled.button`
 `;
 
 const SearchMessage = styled.span`
+  font-size: 18px;
+  letter-spacing: 1px;
   b {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 20px;
+    font-weight: 600;
   }
 `;
 
@@ -149,40 +151,57 @@ function Home() {
 
   const [category, setCategory] = useRecoilState(regionAtom);
   const [searchData, setSearchData] = useState("");
-  const [filterdData, setFilterdData] = useState<ICountry[]>();
+  const [filteredData, setFilteredData] = useState<ICountry[]>();
 
   const onFliterHandler = (event: React.FormEvent<HTMLSelectElement>) =>
     setCategory(event.currentTarget.value);
   const onSearchHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.currentTarget.value;
-    setSearchData(value.toUpperCase());
+    const { value } = event.currentTarget;
+    setSearchData(value);
   };
 
   const onGoTop = () => scroll.scrollToTop();
   const onSubmit = (event: React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    if (filterdData?.length === 0) {
-      console.log("Can't find the " + searchData);
-    }
     setSearchData("");
   };
 
-  // Print the Country list
+  // Print and Filter the Country list
+  // Search bar
   useEffect(() => {
-    if (category === "all") {
-      return setFilterdData(data);
+    const toUpperData = searchData.toUpperCase();
+
+    if (searchData.length > 0 && category !== "all") {
+      const search = filteredData?.filter((country: ICountry) =>
+        country.name.common.toUpperCase().includes(toUpperData)
+      );
+      return setFilteredData(search);
     } else if (searchData.length > 0) {
       const search = data?.filter((country: ICountry) =>
-        country.name.common.toUpperCase().includes(searchData)
+        country.name.common.toUpperCase().includes(toUpperData)
       );
-      return setFilterdData(search);
-    } else if (category !== "all") {
-      const categoryFilter = filterdData?.filter(
+      return setFilteredData(search);
+    } else if (searchData === "") {
+      return setFilteredData(data);
+    }
+  }, [searchData, data]);
+
+  // Select filter
+  useEffect(() => {
+    if (category !== "all" && searchData.length > 0) {
+      const categoryFilter = filteredData?.filter(
         (country: ICountry) => country.region === category
       );
-      return setFilterdData(categoryFilter);
+      return setFilteredData(categoryFilter);
+    } else if (category !== "all") {
+      const categoryFilter = data?.filter(
+        (country: ICountry) => country.region === category
+      );
+      return setFilteredData(categoryFilter);
+    } else {
+      return setFilteredData(data);
     }
-  }, [searchData, data, category]);
+  }, [data, category]);
 
   return (
     <Wrapper>
@@ -218,13 +237,19 @@ function Home() {
         {isLoading ? (
           <p>"is.. loading..."</p>
         ) : (
-          filterdData?.map((country: ICountry) => (
+          filteredData?.map((country: ICountry) => (
             <Card key={country.name.common} data={country} />
           ))
         )}
-        {filterdData?.length === 0 && (
+        {filteredData?.length === 0 && (
           <SearchMessage>
-            Can't find <b>{searchData}</b>
+            Can't find "<b>{searchData}</b>"
+            {category != "all" && (
+              <>
+                {" "}
+                in <b>{category}</b>
+              </>
+            )}
           </SearchMessage>
         )}
       </MyUl>

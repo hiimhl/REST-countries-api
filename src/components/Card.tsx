@@ -7,7 +7,7 @@ import { convertNumUnits } from "../number";
 const ItemWrapper = styled.li<{ headingSize?: boolean }>`
   background-color: ${(props) => props.theme.elementsColor};
   width: 100%;
-  height: auto;
+  height: 20vw;
   min-height: 330px;
   border-radius: 5px;
   color: ${(props) => props.theme.textColor};
